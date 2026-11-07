@@ -1,0 +1,176 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>حرب التكنولوجيا – ICT رابعة ابتدائي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b1020;--panel:rgba(15,23,42,.92);--ink:#f8fafc;--acc:#fbbf24;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#070b17;--panel:rgba(8,12,28,.94)}}
+:root[data-theme="dark"]{--bg:#070b17;--panel:rgba(8,12,28,.94)}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:Cairo,Tahoma,Arial,sans-serif;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+#hud{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);left:8px;right:8px;pointer-events:none;z-index:5}
+#bar{display:flex;justify-content:space-between;gap:6px;font-weight:800;font-size:15px}
+#bar span{background:var(--panel);border-radius:12px;padding:3px 10px}
+#q{margin-top:6px;background:var(--panel);border:2px solid var(--acc);border-radius:14px;padding:8px 12px;font-size:17px;font-weight:800;text-align:center;direction:ltr;line-height:1.35}
+#msg{position:fixed;top:38%;left:0;right:0;text-align:center;font-size:26px;font-weight:800;text-shadow:0 2px 8px #000;pointer-events:none;z-index:6;padding:0 14px}
+#ch{position:fixed;left:50%;top:50%;width:26px;height:26px;margin:-13px;border:3px solid #fff;border-radius:50%;opacity:.85;pointer-events:none;z-index:4}
+#ch:after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;background:#f43f5e;border-radius:50%}
+#flash{position:fixed;inset:0;background:#ef4444;opacity:0;pointer-events:none;z-index:7;transition:opacity .5s}
+#wp{position:fixed;left:0;right:0;text-align:center;bottom:calc(env(safe-area-inset-bottom,0px) + 4px);font-size:13px;opacity:.9;pointer-events:none;z-index:5}
+#joy{position:fixed;left:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);width:130px;height:130px;border-radius:50%;border:3px solid rgba(255,255,255,.5);background:rgba(255,255,255,.12);z-index:5;touch-action:none}
+#kn{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px;border-radius:50%;background:rgba(255,255,255,.65)}
+#fire{position:fixed;right:20px;bottom:calc(env(safe-area-inset-bottom,0px) + 34px);width:104px;height:104px;border-radius:50%;border:4px solid #fff;background:rgba(239,68,68,.75);color:#fff;font:800 20px Cairo,Tahoma,sans-serif;z-index:5;touch-action:none}
+.scr{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(5,8,20,.84);z-index:20;padding:14px;box-sizing:border-box}
+.scr.on{display:flex}
+.card{background:var(--panel);border:2px solid #38bdf8;border-radius:22px;padding:16px;max-width:430px;width:100%;max-height:100%;overflow:auto;text-align:center;touch-action:pan-y}
+h1{margin:0 0 6px;font-size:25px;color:var(--acc)}p{margin:6px 0;font-size:15px;line-height:1.6}
+input{width:100%;box-sizing:border-box;margin:5px 0;padding:10px;border-radius:12px;border:2px solid #475569;background:#0f172a;color:#fff;font:600 16px Cairo,Tahoma,sans-serif;text-align:center;user-select:text;-webkit-user-select:text}
+.btn{display:block;width:100%;box-sizing:border-box;margin:8px 0 0;padding:12px;border:0;border-radius:14px;background:#22c55e;color:#04210f;font:800 18px Cairo,Tahoma,sans-serif;text-decoration:none}
+.btn.w{background:#25d366}.btn.s{background:#475569;color:#fff;font-size:15px;padding:9px}
+.it{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#1e293b;border-radius:12px;padding:8px 10px;margin:6px 0;font-weight:800;font-size:15px}
+.it button{border:0;border-radius:10px;padding:7px 12px;background:var(--acc);font:800 14px Cairo,Tahoma,sans-serif}.it button:disabled{opacity:.4}
+</style></head><body>
+<div id="hud"><div id="bar"><span id="hp"></span><span>🪙 <b id="cn">0</b></span><span>⭐ <b id="sc">0</b></span><span id="pg"></span></div><div id="q"></div></div>
+<div id="msg"></div><div id="ch"></div><div id="flash"></div><div id="wp"></div>
+<div id="joy"><div id="kn"></div></div><button id="fire">اضرب 🔫</button>
+
+<div class="scr on" id="st"><div class="card">
+<h1>⚔️ حرب التكنولوجيا</h1>
+<p>ICT – الصف الرابع – المحور الأول<br>تحرك بالعصا اليسار، اسحب اليمين عشان تلف، واضرب الروبوت اللي عليه الإجابة الصح! الإجابة الغلط أو وصول الروبوت ليك بياخد منك قلب ❤️</p>
+<input id="nm" placeholder="اكتب اسمك" maxlength="30" autocomplete="off">
+<input id="ph" placeholder="رقم واتساب المعلمة (بالكود، مثال 201012345678)" inputmode="numeric" maxlength="15">
+<button class="btn" id="go">ابدأ الحرب 🚀</button></div></div>
+<div class="scr" id="sh"><div class="card"><h1>🛒 المتجر</h1><p>معاك <b id="sc2">0</b> 🪙 – اشتري أسلحة أقوى وقلوب!</p><div id="items"></div><button class="btn" id="cont">كمّل القتال ⚔️</button></div></div>
+<div class="scr" id="en"><div class="card"><h1 id="et"></h1><p id="es"></p><a class="btn w" id="wa" target="_blank" rel="noopener">ابعت السكور على واتساب 📲</a><button class="btn s" id="again">العب تاني 🔁</button></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const TEACHER=""; // ضعي رقم المعلمة هنا بالكود الدولي مثل 201012345678 ليختفي حقل الرقم
+const Q=`Which tool takes photos of the Earth from above?|Satellites|GPR|Magnetometer|Rover C4
+Which device is a 3D ground scanner that finds metals underground?|Rover C4|GPS|Drone|Satellite
+Which tool measures the magnetic field to find metal underground?|Magnetometer|Drone|GPS|Printer
+GPR uses _____ to find objects buried underground.|radar|satellites|a keyboard|a microphone
+True or False: Drones take photos of the Earth from above.|True|False
+GPS is used to find the _____ of something using satellites.|location|magnetic field|depth|sound
+Which one is an INPUT device?|Keyboard|Printer|Screen|Speakers
+Which one is an OUTPUT device?|Printer|Mouse|Microphone|Keyboard
+A Braille terminal allows _____ people to use the computer.|blind|deaf|sleepy|young
+A speech synthesizer allows _____ people to speak.|non-verbal|blind|sleepy|fast
+Information is the final result we get after processing _____.|data|speakers|hardware|a mouse
+True or False: A computer first outputs data, then processes it.|False|True
+Windows is an example of an _____.|operating system|input device|output device|printer
+True or False: The CPU is a type of software.|False|True
+Which program is used to write documents or reports?|MS Word|MS Excel|MS PowerPoint|Windows
+Which program creates tables and graphs?|MS Excel|MS Word|MS PowerPoint|Windows
+Which program is used to create presentations?|MS PowerPoint|MS Excel|MS Word|Windows
+The operating system manages the _____ and software.|hardware|weather|toys|food
+Assistive technology helps _____ do tasks they find difficult.|people of determination|only robots|only teachers|nobody
+Screen magnification software helps people with _____.|poor vision|trouble hearing|speech problems|limb differences
+Hearing aids help people who have trouble _____.|hearing|seeing|speaking|moving
+Alternative communication software helps people with _____ disabilities.|speech and language|hearing|seeing|walking
+Paraclimbing tools help climbers with _____ climb mountains.|limb differences|poor vision|trouble hearing|speech problems
+True or False: Hearing aids help people with poor vision.|False|True
+If an app won’t open, the first thing to try is to _____ your computer.|restart|break|sell|hide
+If your screen freezes, press and hold _____.|Ctrl + Alt + Del|Alt + Shift|Alt + F8|F10 + Del
+If you can’t find a file, use the _____ next to the Start button.|Search Box|printer|microphone|speaker
+Where do you look for a Microsoft Word file?|Documents folder|Pictures folder|Games folder|Music folder
+If the keyboard isn’t typing, check that its _____ is connected correctly.|cable|printer|speaker|camera
+True or False: Restarting the device helps solve most problems.|True|False
+The first step of solving any problem is _____ data.|collecting|graphing|analyzing|reviewing
+Which one is a source of data collection?|Surveys|Cartoons|Rumors|Games
+After collecting data, the next step is _____ it.|analyzing|losing|hiding|ignoring
+The best way to understand lots of data is to look for _____.|trends|records|surveys|interviews
+_____ is used to analyze data and make graphs.|Excel|Word|PowerPoint|Paint
+When collecting data, we must use _____ sources.|trusted|fake|unknown|unreliable`.split("\n").map(l=>{const a=l.split("|");return{q:a[0],ok:a[1],w:a.slice(2)}});
+const TOTAL=15,$=id=>document.getElementById(id),V=THREE.Vector3;
+const W=[{n:"مسدس الفوم",c:0xffb703,cd:.5,r:1.4,p:0},{n:"ليزر",c:0x22d3ee,cd:.3,r:1.9,p:50},{n:"بلازما",c:0xa855f7,cd:.2,r:2.4,p:110},{n:"صاروخ الذهب",c:0xf43f5e,cd:.12,r:3,p:200}];
+let S="menu",wi=0,own=[1,0,0,0],lives=3,coins=0,score=0,correct=0,streak=0,qi=0,deck=[],cur=null,ens=[],lock=false,tq=0,cd=0,yaw=0,pitch=0,shake=0,rec=0,mt=0;
+const pos=new V(0,1.6,0),keys={};
+let ac;function snd(f,d,t){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain(),n=ac.currentTime;o.type=t||"square";o.frequency.setValueAtTime(f,n);o.frequency.exponentialRampToValueAtTime(Math.max(40,f/3),n+d);g.gain.setValueAtTime(.06,n);g.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(g);g.connect(ac.destination);o.start();o.stop(n+d)}catch(e){}}
+// ---- scene
+const sc=new THREE.Scene();sc.background=new THREE.Color(0x14204a);sc.fog=new THREE.Fog(0x14204a,18,65);
+const cam=new THREE.PerspectiveCamera(70,1,.1,200);cam.rotation.order="YXZ";sc.add(cam);
+const R=new THREE.WebGLRenderer({antialias:true});R.setPixelRatio(Math.min(devicePixelRatio||1,2));R.domElement.style.cssText="position:fixed;left:0;top:0";document.body.prepend(R.domElement);
+function rs(){R.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}addEventListener("resize",rs);rs();
+sc.add(new THREE.HemisphereLight(0xbcd7ff,0x223355,1.1));const dl=new THREE.DirectionalLight(0xffffff,.8);dl.position.set(5,10,4);sc.add(dl);
+const gc=document.createElement("canvas");gc.width=gc.height=128;const g=gc.getContext("2d");g.fillStyle="#1d2b5e";g.fillRect(0,0,128,128);g.strokeStyle="#38bdf8";g.lineWidth=4;g.strokeRect(0,0,128,128);
+const gt=new THREE.CanvasTexture(gc);gt.wrapS=gt.wrapT=THREE.RepeatWrapping;gt.repeat.set(40,40);
+const fl=new THREE.Mesh(new THREE.PlaneGeometry(160,160),new THREE.MeshLambertMaterial({map:gt}));fl.rotation.x=-Math.PI/2;sc.add(fl);
+for(let i=0;i<28;i++){const a=i/28*6.283,h=5+Math.random()*10,c=new THREE.Color().setHSL(Math.random(),.7,.5);const m=new THREE.Mesh(new THREE.BoxGeometry(2.4,h,2.4),new THREE.MeshLambertMaterial({color:c,emissive:c,emissiveIntensity:.3}));m.position.set(Math.sin(a)*40,h/2,Math.cos(a)*40);sc.add(m)}
+const sp=[];for(let i=0;i<300;i++){const a=Math.random()*6.283,b=Math.random()*1.3+.1;sp.push(Math.sin(a)*Math.cos(b)*100,Math.sin(b)*100,Math.cos(a)*Math.cos(b)*100)}
+const sg=new THREE.BufferGeometry();sg.setAttribute("position",new THREE.Float32BufferAttribute(sp,3));sc.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xffffff,size:1.4,fog:false})));
+// gun
+const gun=new THREE.Group(),gm=new THREE.MeshLambertMaterial({color:W[0].c});
+const b2=new THREE.Mesh(new THREE.CylinderGeometry(.04,.05,.38,10),new THREE.MeshLambertMaterial({color:0x334155}));b2.rotation.x=Math.PI/2;b2.position.z=-.4;
+const b3=new THREE.Mesh(new THREE.BoxGeometry(.1,.2,.12),gm);b3.position.set(0,-.14,.12);
+gun.add(new THREE.Mesh(new THREE.BoxGeometry(.12,.14,.55),gm),b2,b3);gun.position.set(.28,-.25,-.55);cam.add(gun);
+const mz=new THREE.Mesh(new THREE.SphereGeometry(.09,8,8),new THREE.MeshBasicMaterial({color:0xffffaa}));mz.position.z=-.62;mz.visible=false;gun.add(mz);
+// ---- enemies
+const PAL=[0xef4444,0x22c55e,0x3b82f6,0xf59e0b];
+function rr(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+r,b,r);x.closePath()}
+function label(t,col){const c=document.createElement("canvas");c.width=512;c.height=170;const x=c.getContext("2d");x.fillStyle="#fff";rr(x,6,6,500,158,28);x.fill();x.lineWidth=10;x.strokeStyle=col;x.stroke();x.fillStyle="#0f172a";x.textAlign="center";x.textBaseline="middle";
+let ln=[t];if(t.length>14){const w=t.split(" ");let a="",i=0;while(i<w.length&&(a+" "+w[i]).trim().length<=Math.ceil(t.length/2)+2){a=(a+" "+w[i]).trim();i++}if(!a){a=w[0];i=1}ln=[a,w.slice(i).join(" ")]}
+let fs=ln.length>1?50:68;const F=()=>x.font="800 "+fs+"px Cairo,Arial,sans-serif";F();while(fs>20&&Math.max(...ln.map(s=>x.measureText(s).width))>470){fs-=3;F()}
+ln.forEach((s,i)=>x.fillText(s,256,85+(i-(ln.length-1)/2)*(fs+6)));
+const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false,transparent:true,fog:false}));s.scale.set(3.6,1.2,1);s.renderOrder=5;return s}
+function mk(ans,ok,i){const e=new THREE.Group(),col=PAL[i%4],mat=new THREE.MeshLambertMaterial({color:col,emissive:col,emissiveIntensity:.25});
+const b=new THREE.Mesh(new THREE.SphereGeometry(.8,16,12),mat);b.position.y=1;e.add(b);
+const wh=new THREE.MeshBasicMaterial({color:0xffffff}),bk=new THREE.MeshBasicMaterial({color:0x111111}),yl=new THREE.MeshBasicMaterial({color:0xfde047});
+[-.3,.3].forEach(s=>{const a=new THREE.Mesh(new THREE.SphereGeometry(.2,10,8),wh);a.position.set(s,1.2,.62);const p=new THREE.Mesh(new THREE.SphereGeometry(.09,8,6),bk);p.position.set(s,1.2,.8);
+const n=new THREE.Mesh(new THREE.CylinderGeometry(.03,.03,.6),mat);n.position.set(s,2,0);n.rotation.z=-s;const t=new THREE.Mesh(new THREE.SphereGeometry(.1,8,6),yl);t.position.set(s*1.5,2.3,0);e.add(a,p,n,t)});
+const lb=label(ans,"#"+col.toString(16).padStart(6,"0"));lb.position.y=3.4;e.add(lb);e.userData={ok,ph:Math.random()*6};return e}
+// ---- fx
+const pg=new THREE.BoxGeometry(.2,.2,.2),fx=[];
+function boom(e,col){const p=e.position;for(let i=0;i<16;i++){const m=new THREE.Mesh(pg,new THREE.MeshBasicMaterial({color:col}));m.position.set(p.x,1.5,p.z);sc.add(m);fx.push({m,v:new V((Math.random()-.5)*9,Math.random()*7,(Math.random()-.5)*9),l:.9})}sc.remove(e);ens=ens.filter(x=>x!==e)}
+function toast(t,c){const m=$("msg");m.textContent=t;m.style.color=c||"#fff";m.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>m.style.opacity=0,1800)}
+function hud(){$("hp").textContent="❤️".repeat(Math.max(0,lives));$("cn").textContent=coins;$("sc").textContent=score;$("pg").textContent=Math.min(qi,TOTAL)+"/"+TOTAL;$("wp").textContent="🔫 "+W[wi].n}
+// ---- game flow
+function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+function start(){deck=shuf(Q).slice(0,TOTAL);wi=0;own=[1,0,0,0];gm.color.setHex(W[0].c);lives=3;coins=0;score=0;correct=0;streak=0;qi=0;pos.set(0,1.6,0);ens.forEach(e=>sc.remove(e));ens=[];["st","sh","en"].forEach(i=>$(i).classList.remove("on"));S="play";nextQ()}
+function nextQ(){if(qi>=TOTAL)return end();cur=deck[qi++];lock=false;tq=performance.now();$("q").textContent=cur.q;hud();
+const o=shuf([cur.ok,...cur.w]).slice(0,4);if(!o.includes(cur.ok))o[0]=cur.ok;const a0=yaw+Math.PI,n=o.length;
+o.forEach((t,i)=>{const e=mk(t,t===cur.ok,i),a=a0+(i-(n-1)/2)*.55,r=20+Math.random()*3;e.position.set(pos.x+Math.sin(a)*r,0,pos.z+Math.cos(a)*r);sc.add(e);ens.push(e)})}
+function after(){lock=true;qi%5===0&&qi<TOTAL&&lives>0?setTimeout(shop,1500):setTimeout(lives>0?nextQ:end,lives>0?1500:1700)}
+function wrong(why){lives--;streak=0;$("flash").style.opacity=.55;setTimeout(()=>$("flash").style.opacity=0,200);shake=.5;snd(150,.4,"sawtooth");toast(why+" الصح: "+cur.ok,"#fca5a5");ens.slice().forEach(e=>boom(e,e.userData.ok?0xfde047:0x94a3b8));hud();after()}
+function hit(e){if(lock)return;lock=true;if(e.userData.ok){streak++;correct++;const t=(performance.now()-tq)/1e3,gain=10+Math.max(0,Math.round(10-t*.7))+Math.min(streak,5)*2;coins+=gain;score+=gain*10;boom(e,0x22c55e);ens.slice().forEach(x=>boom(x,0x94a3b8));snd(660,.25,"triangle");setTimeout(()=>snd(990,.25,"triangle"),130);toast("✅ برافو! +"+gain+" 🪙","#86efac");hud();after()}else{boom(e,0xef4444);wrong("❌ غلط!")}}
+function fire(){if(S!=="play"||cd>0)return;cd=W[wi].cd;snd(520,.15);rec=.12;mt=.05;mz.visible=true;if(lock)return;
+const d=new V();cam.getWorldDirection(d);let best=null,bt=1e9;
+ens.forEach(e=>{const v=new V(e.position.x-pos.x,1.8-pos.y,e.position.z-pos.z),t=v.dot(d);if(t<0)return;if(v.sub(d.clone().multiplyScalar(t)).length()<W[wi].r&&t<bt){best=e;bt=t}});
+if(best)hit(best)}
+function shop(){S="shop";$("sc2").textContent=coins;const el=$("items");el.innerHTML="";
+W.forEach((w,i)=>{if(!i)return;const d=document.createElement("div");d.className="it";const b=document.createElement("button");
+if(own[i]){b.textContent=wi===i?"متجهّز ✔":"جهّز";b.disabled=wi===i;b.onclick=()=>{wi=i;gm.color.setHex(w.c);hud();shop()}}else{b.textContent=w.p+" 🪙";b.disabled=coins<w.p;b.onclick=()=>{coins-=w.p;own[i]=1;wi=i;gm.color.setHex(w.c);hud();shop()}}
+d.innerHTML="<span>"+w.n+" (ضرب أسرع وأوسع)</span>";d.appendChild(b);el.appendChild(d)});
+const d=document.createElement("div");d.className="it";d.innerHTML="<span>❤️ قلب إضافي</span>";const b=document.createElement("button");b.textContent="40 🪙";b.disabled=coins<40||lives>=5;b.onclick=()=>{coins-=40;lives++;hud();shop()};d.appendChild(b);el.appendChild(d);$("sh").classList.add("on")}
+function end(){S="over";ens.forEach(e=>sc.remove(e));ens=[];const fin=score+Math.max(0,lives)*50,st=correct/TOTAL>=.85?3:correct/TOTAL>=.6?2:correct/TOTAL>=.35?1:0,nm=$("nm").value.trim();
+$("et").textContent=lives>0?"🏆 كسبت الحرب!":"💥 خلصت القلوب!";$("es").innerHTML="الإجابات الصح: <b>"+correct+"/"+TOTAL+"</b><br>السكور: <b>"+fin+"</b><br>"+(st?"⭐".repeat(st):"حاول تاني يا بطل!");
+const msg="🎮 نتيجة لعبة ICT (الصف الرابع – المحور الأول)\nالاسم: "+nm+"\nالسكور: "+fin+"\nالإجابات الصح: "+correct+"/"+TOTAL+"\nالنجوم: "+(st?"⭐".repeat(st):"0");
+const ph=(TEACHER||$("ph").value).replace(/\D/g,"");$("wa").href="https://wa.me/"+ph+"?text="+encodeURIComponent(msg);$("en").classList.add("on")}
+$("go").onclick=()=>{const n=$("nm").value.trim();if(n.length<2){$("nm").focus();return}try{localStorage.setItem("nm",n);localStorage.setItem("ph",$("ph").value)}catch(e){}snd(440,.1);start()};
+$("cont").onclick=()=>{$("sh").classList.remove("on");S="play";nextQ()};$("again").onclick=()=>{$("en").classList.remove("on");$("st").classList.add("on");S="menu"};
+if(TEACHER)$("ph").style.display="none";try{$("nm").value=localStorage.getItem("nm")||"";$("ph").value=localStorage.getItem("ph")||""}catch(e){}
+// ---- input
+const J=$("joy"),jo={x:0,y:0};let jid=null,lid=null,lx=0,ly=0,lt=0,lm=0,fh=false;
+function jm(e){const r=J.getBoundingClientRect(),m=r.width/2;let dx=e.clientX-r.left-m,dy=e.clientY-r.top-m;const d=Math.hypot(dx,dy);if(d>m){dx*=m/d;dy*=m/d}jo.x=dx/m;jo.y=dy/m;$("kn").style.transform="translate("+dx+"px,"+dy+"px)"}
+J.onpointerdown=e=>{jid=e.pointerId;J.setPointerCapture(jid);jm(e)};J.onpointermove=e=>{e.pointerId===jid&&jm(e)};
+J.onpointerup=J.onpointercancel=e=>{if(e.pointerId===jid){jid=null;jo.x=jo.y=0;$("kn").style.transform=""}};
+const F=$("fire");F.onpointerdown=e=>{fh=true;F.setPointerCapture(e.pointerId)};F.onpointerup=F.onpointercancel=()=>fh=false;
+const cv=R.domElement;cv.onpointerdown=e=>{lid=e.pointerId;cv.setPointerCapture(lid);lx=e.clientX;ly=e.clientY;lt=performance.now();lm=0};
+cv.onpointermove=e=>{if(e.pointerId!==lid)return;const dx=e.clientX-lx,dy=e.clientY-ly;lx=e.clientX;ly=e.clientY;lm+=Math.abs(dx)+Math.abs(dy);yaw-=dx*.005;pitch=Math.max(-.9,Math.min(.9,pitch-dy*.005))};
+cv.onpointerup=cv.onpointercancel=e=>{if(e.pointerId===lid){lid=null;if(lm<8&&performance.now()-lt<300)fire()}};
+addEventListener("keydown",e=>{if(e.target.tagName==="INPUT")return;keys[e.code]=1;if(e.code==="Space")e.preventDefault()});addEventListener("keyup",e=>keys[e.code]=0);
+// ---- loop
+let last=performance.now();
+function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1e3);last=now;cd-=dt;
+if(S==="menu"||S==="shop")yaw+=dt*.1;
+if(S==="play"){const mx=jo.x+(keys.KeyD?1:0)-(keys.KeyA?1:0),my=jo.y+(keys.KeyS?1:0)-(keys.KeyW?1:0);
+yaw+=((keys.ArrowLeft?1:0)-(keys.ArrowRight?1:0))*dt*2;pitch=Math.max(-.9,Math.min(.9,pitch+((keys.ArrowUp?1:0)-(keys.ArrowDown?1:0))*dt*1.5));
+pos.x+=(Math.cos(yaw)*mx+Math.sin(yaw)*my)*6*dt;pos.z+=(-Math.sin(yaw)*mx+Math.cos(yaw)*my)*6*dt;const r=Math.hypot(pos.x,pos.z);if(r>28){pos.x*=28/r;pos.z*=28/r}
+if(fh||keys.Space)fire();
+if(!lock)for(const e of ens.slice()){const dx=pos.x-e.position.x,dz=pos.z-e.position.z,d=Math.hypot(dx,dz);e.rotation.y=Math.atan2(dx,dz);
+const sp=1.1+qi*.09;e.position.x+=dx/d*sp*dt+Math.cos(now/700+e.userData.ph)*.4*dt;e.position.z+=dz/d*sp*dt;e.position.y=Math.abs(Math.sin(now/300+e.userData.ph))*.35;
+if(d<2.4){lock=true;boom(e,0xef4444);wrong("💥 الروبوت وصل لك!");break}}}
+if(mt>0&&(mt-=dt)<=0)mz.visible=false;rec*=.85;gun.position.z=-.55+rec;shake*=.9;
+for(let i=fx.length-1;i>=0;i--){const f=fx[i];f.v.y-=18*dt;f.m.position.addScaledVector(f.v,dt);f.m.scale.multiplyScalar(.96);if((f.l-=dt)<=0){sc.remove(f.m);fx.splice(i,1)}}
+cam.position.set(pos.x+(Math.random()-.5)*shake,pos.y+(Math.random()-.5)*shake,pos.z);cam.rotation.set(pitch,yaw,0);R.render(sc,cam)}
+hud();requestAnimationFrame(loop);
+</script></body></html>
